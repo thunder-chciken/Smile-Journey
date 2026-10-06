@@ -53,10 +53,11 @@
     app.innerHTML = `
       <div class="app-root" id="root">
         ${TABS.map((t) => `<div class="tab-view" data-view="${t.id}"></div>`).join('')}
+
+      </div>
         <nav class="tabbar" id="tabbar">
           ${TABS.map((t) => `<button class="tab" data-tab="${t.id}">${ic(t.icon)}<span>${t.label}</span><span class="badge" data-badge="${t.id}" hidden></span></button>`).join('')}
         </nav>
-      </div>
       <div class="push" id="push"></div>
       <div class="hud" id="hud"></div>
       <div class="login" id="login"></div>`;
@@ -195,7 +196,6 @@
     const u = unreadTotal();
     const b = $('[data-badge="messages"]', app);
     b.hidden = !u; b.textContent = u;
-    $('#tabbar').classList.toggle('hidden', !!PAGES[top().id].hideTabbar);
     $('#root').classList.toggle('large', S.textLarge);
   }
 
@@ -573,7 +573,6 @@
     title: (p) => S.threads.find((t) => t.id === p.arg).name,
     cls: 'thread-page',
     solidNav: true,
-    hideTabbar: true,
     raw: true,
     right: () => `<button class="nav-icon-btn" data-act="hud:Calling the office…:phone" aria-label="Call">${ic('phone')}</button>`,
     render(p) {
@@ -616,7 +615,7 @@
     mount(el, p) {
       const t = S.threads.find((x) => x.id === p.arg);
       if (t.unread) { t.unread = 0; updateChrome(); window.DASH?.refresh(); }
-      el.style.display = 'flex'; el.style.flexDirection = 'column'; el.style.paddingTop = '0'; el.style.paddingBottom = '0'; el.style.overflow = 'hidden';
+      el.style.display = 'flex'; el.style.flexDirection = 'column'; el.style.paddingTop = '0'; el.style.paddingBottom = 'var(--tabbar-h)'; el.style.overflow = 'hidden';
       const nav = $('.navbar', el); nav.style.position = 'absolute'; nav.style.marginTop = '0';
       const sc = $('.msg-scroll', el); sc.scrollTop = sc.scrollHeight;
       const f = $('#field', el), btn = $('#sendBtn', el);
@@ -1064,7 +1063,7 @@
     app.classList.remove('sheet-open');
     o.bd.classList.remove('show');
     o.sh.classList.remove('dragging');
-    o.sh.style.transform = 'translateY(100%)';
+    o.sh.style.transform = '';
     o.sh.classList.remove('show');
     setTimeout(() => { o.bd.remove(); o.sh.remove(); }, instant ? 0 : 520);
   }
